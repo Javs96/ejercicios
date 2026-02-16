@@ -55,14 +55,14 @@
       script.src = `./ejercicios/ej_${n}.js`;
       script.onload = () => {
         console.clear();
-        console.log(`✅ Cargado: ej_${n}.js`);
+        console.log(`Cargado: ej_${n}.js`);
         btnRun.disabled = (typeof window.run !== "function");
         if (btnRun.disabled) {
           console.warn("Este archivo no expone window.run(). Revisa ej_" + n + ".js");
         }
       };
       script.onerror = () => {
-        console.error(`❌ No se pudo cargar ./ejercicios/ej_${n}.js`);
+        console.error(`No se pudo cargar ./ejercicios/ej_${n}.js`);
         btnRun.disabled = true;
       };
 
@@ -72,7 +72,7 @@
 
     btnRun.addEventListener("click", () => {
       if (typeof window.run === "function") {
-        console.log("▶ Ejecutando pruebas...");
+        console.log("Ejecutando pruebas...");
         window.run();
       } else {
         console.warn("No hay window.run() cargado.");
