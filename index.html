@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tarea 4 - JavaScript</title>
+  <style>
+    body { font-family: system-ui, Arial; margin: 20px; }
+    .row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    select, button { padding: 10px; font-size: 16px; }
+    #hint { color: #444; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Tarea 4 - Ejercicios JS</h1>
+
+  <div class="row">
+    <label for="ej">Ejercicio:</label>
+    <select id="ej"></select>
+    <button id="load">Cargar</button>
+    <button id="run" disabled>Ejecutar pruebas (ver consola)</button>
+  </div>
+
+  <p id="hint">
+    Abre la consola del navegador (F12 → Console).  
+    1) Elige el ejercicio → 2) “Cargar” → 3) “Ejecutar”.
+  </p>
+
+  <script>
+    const select = document.getElementById("ej");
+    const btnLoad = document.getElementById("load");
+    const btnRun = document.getElementById("run");
+
+    // Llena el dropdown 1..31
+    for (let i = 1; i <= 31; i++) {
+      const opt = document.createElement("option");
+      opt.value = i;
+      opt.textContent = `Ejercicio ${i}`;
+      select.appendChild(opt);
+    }
+
+    let currentScript = null;
+
+    btnLoad.addEventListener("click", () => {
+      const n = Number(select.value);
+
+      // Limpia la función run previa (si existe)
+      window.run = undefined;
+
+      // Remueve el script previo
+      if (currentScript) currentScript.remove();
+
+      // Crea nuevo script
+      const script = document.createElement("script");
+      script.src = `./ejercicios/ej_${n}.js`;
+      script.onload = () => {
+        console.clear();
+        console.log(`✅ Cargado: ej_${n}.js`);
+        btnRun.disabled = (typeof window.run !== "function");
+        if (btnRun.disabled) {
+          console.warn("Este archivo no expone window.run(). Revisa ej_" + n + ".js");
+        }
+      };
+      script.onerror = () => {
+        console.error(`❌ No se pudo cargar ./ejercicios/ej_${n}.js`);
+        btnRun.disabled = true;
+      };
+
+      document.body.appendChild(script);
+      currentScript = script;
+    });
+
+    btnRun.addEventListener("click", () => {
+      if (typeof window.run === "function") {
+        console.log("▶ Ejecutando pruebas...");
+        window.run();
+      } else {
+        console.warn("No hay window.run() cargado.");
+      }
+    });
+  </script>
+</body>
+</html>
